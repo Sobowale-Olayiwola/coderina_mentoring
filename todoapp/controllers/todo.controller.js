@@ -1,10 +1,24 @@
 const mongoose = require("mongoose");
 const { Todo } = require("../models/todo");
+const {
+  createTodoSchema,
+  updateTodoSchema,
+} = require("../utils/validators/todo");
+const filterJOIValidation = require("../utils/validators/filterJOI");
 
 async function createTodo(req, res) {
   try {
-    const { description, title, userId } = req.body;
-    const oid = mongoose.Types.ObjectId(userId);
+    const { error } = createTodoSchema.validate(req.body);
+    if (error) {
+      return res.status(422).json({
+        success: false,
+        message: filterJOIValidation(error.message),
+        payload: null,
+      });
+    }
+    const { description, title } = req.body;
+    console.log(req.userId);
+    const oid = mongoose.Types.ObjectId(req.userId);
     const newTodo = new Todo({ description, title, userId: oid });
     const result = await newTodo.save();
     return res.status(201).json({
@@ -62,6 +76,14 @@ async function updateTodoById(req, res) {
   try {
     const { id } = req.params;
     const { body } = req;
+    const { error } = updateTodoSchema.validate(body);
+    if (error) {
+      return res.status(422).json({
+        success: false,
+        message: filterJOIValidation(error.message),
+        payload: null,
+      });
+    }
     const oid = mongoose.Types.ObjectId(id);
     const result = await Todo.updateOne({ _id: oid }, { ...body });
     return res.status(200).json({
