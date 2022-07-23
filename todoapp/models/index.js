@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-
+const { DB_URI } = process.env;
 // TODO create env for database connection uri
 function connectDB() {
-  mongoose.connect("mongodb://localhost:27017/coderina-todo-app", (error) => {
+  mongoose.connect(DB_URI, (error) => {
     if (error) {
       console.log("Database connection failed ", error.message);
     } else {
