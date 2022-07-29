@@ -24,7 +24,7 @@ async function createUser(req, res) {
       });
     }
     body.password = await hashObject(body.password);
-    const newUser = new User({ ...body });
+    const newUser = new User({ ...body, photo: req.file.path });
 
     const result = await newUser.save();
     return res.status(201).json({
