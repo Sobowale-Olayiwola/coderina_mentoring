@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const fs = require("fs");
 const { User } = require("../models/user");
+const cloudinary = require("../config/cloudinary.config");
 const {
   hashObject,
   verifyHash,
@@ -14,7 +16,10 @@ const {
 
 async function createUser(req, res) {
   try {
-    const { body } = req;
+    const { body, file } = req;
+    console.log(req.file);
+    const { path } = file;
+    const uploader = async (path) => await cloudinary.uploads(path, "Images");
     const { error } = createUserSchema.validate(body);
     if (error) {
       return res.status(422).json({
@@ -24,15 +29,17 @@ async function createUser(req, res) {
       });
     }
     body.password = await hashObject(body.password);
-    const newUser = new User({ ...body });
-
+    const imageUrl = await uploader(path);
+    const newUser = new User({ ...body, imageUrl: imageUrl.url });
     const result = await newUser.save();
+    fs.unlinkSync(path);
     return res.status(201).json({
       success: true,
       message: "User successfully created",
       payload: result,
     });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: error.message, payload: null });

@@ -19,6 +19,9 @@ const userSchema = new Schema(
     phoneNumber: {
       type: Number,
     },
+    imageUrl: {
+      type: String,
+    },
   },
   {
     timestamps: true,
