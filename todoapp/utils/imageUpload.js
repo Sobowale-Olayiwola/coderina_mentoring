@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   },
 });
 function fileFilter(req, file, cb) {
-  if (file.originalname.match(/\.(jpeg|jpg|png)$/)) {
+  if (file.originalname.match(/\.(jpeg|jpg|png)$/gi)) {
     return cb(null, true);
   } else {
     return cb(null, false);
