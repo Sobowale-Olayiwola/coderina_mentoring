@@ -2,6 +2,7 @@ const todoRouteHandler = require("./todo.routes");
 const userRouteHandler = require("./user.routes");
 const { verifyUserToken } = require("../middlewares/auth");
 const upload = require("../utils/imageUpload");
+
 const userUpload = upload.single("profileImage");
 
 module.exports = (app) => {
