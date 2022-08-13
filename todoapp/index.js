@@ -1,11 +1,10 @@
 const express = require("express");
-const path = require("path");
-const { connectDB } = require("./models");
+const { connectDB } = require("./config/db.config");
 const routes = require("./routes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//Connection to MongoDB
+//Connection to PSQL
 connectDB();
 
 //Middlewares
