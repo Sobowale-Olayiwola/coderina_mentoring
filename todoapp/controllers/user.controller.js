@@ -10,7 +10,6 @@ const {
 async function createUser(req, res) {
   try {
     const { body, file } = req;
-    console.log(req.file);
     const { path } = file;
     const uploader = async (path) => await cloudinary.uploads(path, "Images");
     body.password = await hashObject(body.password);
