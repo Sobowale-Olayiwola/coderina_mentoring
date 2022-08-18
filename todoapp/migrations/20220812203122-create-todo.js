@@ -14,22 +14,17 @@ module.exports = {
       },
       title: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       body: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
       createdAt: {
-        allowNull: false,
         type: DataTypes.DATE,
       },
       updatedAt: {
-        allowNull: false,
         type: DataTypes.DATE,
       },
     });

@@ -9,13 +9,21 @@ const {
 
 async function createUser(req, res) {
   try {
-    const { body, file } = req;
-    const { path } = file;
-    const uploader = async (path) => await cloudinary.uploads(path, "Images");
+    const { body } = req;
+
+    if (body.name === "" && body.email === "" && body.password === "") {
+      res.status(400).json({ msg: "All inputs must be entered!" });
+    }
+    const user = await User.findOne({ where: { email: body.email } });
+    if (user) {
+      res.status(409).json({ msg: "User Already Exists!" });
+    }
+    // const { path } = file;
+    // const uploader = async (path) => await cloudinary.uploads(path, "Images");
     body.password = await hashObject(body.password);
-    const imageUrl = await uploader(path);
-    const newUser = await User.create({ ...body, imageUrl: imageUrl.url });
-    fs.unlinkSync(path);
+    // const imageUrl = await uploader(path);
+    const newUser = await User.create({ ...body, imageUrl: "imageUrl.url" });
+    // fs.unlinkSync(path);
     return res.status(201).json({
       success: true,
       message: "User successfully created",
