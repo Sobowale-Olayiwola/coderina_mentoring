@@ -15,7 +15,7 @@ async function verifyUserToken(req, res, next) {
     const decoded = await decodeToken(bearerToken);
 
     // Append the parameters to the req object
-    req.userId = decoded.userId;
+    req.oid = decoded.oid;
     req.role = decoded.role;
 
     return next();
