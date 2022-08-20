@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { DB_URI } = process.env;
 // TODO create env for database connection uri
-function connectDB() {
+function connectMongoDB() {
   mongoose.connect(DB_URI, (error) => {
     if (error) {
       console.log("Database connection failed ", error.message);
@@ -11,4 +11,4 @@ function connectDB() {
   });
 }
 
-module.exports = { connectDB };
+module.exports = { connectMongoDB };

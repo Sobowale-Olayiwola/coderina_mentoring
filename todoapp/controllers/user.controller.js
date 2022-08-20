@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
-const { User } = require("../models/user");
+const { User } = require("../models/mongodb/user");
+const UserService = require("../service/user");
+const mongoRepository = require("../repository/mongo/user");
+const postgresRepo = require("../repository/postgresql/user");
+//separation of concerns
+const userService = new UserService(postgresRepo);
 const {
   hashObject,
   verifyHash,
@@ -24,9 +29,7 @@ async function createUser(req, res) {
       });
     }
     body.password = await hashObject(body.password);
-    const newUser = new User({ ...body });
-
-    const result = await newUser.save();
+    const result = await userService.createUser({ body });
     return res.status(201).json({
       success: true,
       message: "User successfully created",
@@ -50,7 +53,7 @@ async function loginUser(req, res) {
       });
     }
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).lean();
+    const user = await userService.getUserByEmail({ email });
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -93,7 +96,6 @@ async function loginUser(req, res) {
 
 async function getUsers(req, res) {
   try {
-    const result = await User.find({});
     return res.status(200).json({
       success: true,
       message: "User successfully found",
@@ -109,9 +111,8 @@ async function getUsers(req, res) {
 async function getUserById(req, res) {
   try {
     const { id } = req.params;
-    const oid = mongoose.Types.ObjectId(id);
-    const result = await User.find({ _id: oid });
-    if (!result.length)
+    const result = await userService.getUserById({ id });
+    if (!result)
       return res.status(404).json({
         success: false,
         message: "User not found",
@@ -141,8 +142,7 @@ async function updateUserById(req, res) {
         payload: null,
       });
     }
-    const oid = mongoose.Types.ObjectId(id);
-    const result = await User.updateOne({ _id: oid }, { ...body });
+    const result = await userService.updateUserById({ id });
     return res.status(200).json({
       success: true,
       message: "User successfully updated",

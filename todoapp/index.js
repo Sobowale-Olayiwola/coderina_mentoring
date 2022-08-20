@@ -1,11 +1,14 @@
 const express = require("express");
-const { connectDB } = require("./models");
+const { connectMongoDB } = require("./models/mongodb");
+const { connectPostgresDB } = require("./config/db.config");
 const routes = require("./routes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 //Connection to MongoDB
-connectDB();
+connectMongoDB();
+// Connection to PostgresDB
+connectPostgresDB();
 
 //Middlewares
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
